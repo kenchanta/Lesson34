@@ -30,6 +30,7 @@ public class EmployeeService {
     public ErrorKinds update(Employee employee) {
         Employee original = findByCode(employee.getCode());
         if (original == null) {
+            System.out.println("Hello");
             return ErrorKinds.SUCCESS; //EmployeeにNOTFOUNDを追加してもいい？
         }
         if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
