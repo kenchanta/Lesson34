@@ -113,7 +113,7 @@ public class EmployeeController {
         if (result != ErrorKinds.SUCCESS) {
              return "employees/update";
         }
-        return "redirect:/employees/list";
+        return "redirect:/employees";
     }
 
 
