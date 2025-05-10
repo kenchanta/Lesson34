@@ -26,12 +26,12 @@ public class EmployeeService {
     }
 
     // 追加：従業員更新
-    @Transactional
+    @Transactional //失敗すればロールバック.@Service などSpringのコンポーネントとして管理されていないと意味をなさない
     public ErrorKinds update(Employee employee) {
         Employee original = findByCode(employee.getCode());
         if (original == null) {
             System.out.println("Hello");
-            return ErrorKinds.SUCCESS; //EmployeeにNOTFOUNDを追加してもいい？
+            return ErrorKinds.NOT_FOUND;
         }
         if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
             // 空なら暗号化せず元のを使う
