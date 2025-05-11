@@ -1,6 +1,8 @@
 package com.techacademy.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
+import com.techacademy.constants.ErrorMessage;
 import com.techacademy.entity.Employee;
 import com.techacademy.repository.EmployeeRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +33,6 @@ public class EmployeeService {
     public ErrorKinds update(Employee employee) {
         Employee original = findByCode(employee.getCode());
         if (original == null) {
-            System.out.println("Hello");
             return ErrorKinds.NOT_FOUND;
         }
         if (employee.getPassword() == null || employee.getPassword().isEmpty()) {
@@ -38,12 +40,19 @@ public class EmployeeService {
             employee.setPassword(original.getPassword());
         }
         else {
-        ErrorKinds result = employeePasswordCheck(employee);
+            ErrorKinds result = employeePasswordCheck(employee);
             if (result != ErrorKinds.CHECK_OK) {
                 return result;
             }
          // employee.getPassword() は事前にエンコード済み（employeePasswordCheck()内で）
             original.setPassword(employee.getPassword());
+        }
+
+        if (employee.getName() == null || employee.getName().isEmpty()) {
+            return ErrorKinds.NAME_BLANK_ERROR;
+        }
+        if (employee.getName().length() >= 20) {
+            return ErrorKinds.NAME_RANGCHECK_ERROR;
         }
 
         original.setName(employee.getName());

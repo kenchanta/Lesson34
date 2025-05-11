@@ -103,14 +103,16 @@ public class EmployeeController {
         return "employees/update";
     }
 
-    // 追加：更新処理 問題あり？？
+    // 追加：更新処理
     @PostMapping(value = "/update")
     public String postUser(@Validated Employee employee, BindingResult res, Model model) {
         if (res.hasErrors()) {
-            return "employees/update";  // エラーがある場合は更新画面に戻す
+            return "employees/update";
         }
+
         ErrorKinds result = employeeService.update(employee);
         if (result != ErrorKinds.SUCCESS) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
              return "employees/update";
         }
         return "redirect:/employees";

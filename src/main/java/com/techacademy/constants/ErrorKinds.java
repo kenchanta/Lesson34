@@ -8,7 +8,7 @@ public enum ErrorKinds {
     BLANK_ERROR,
     // 半角英数字チェックエラー
     HALFSIZE_ERROR,
-    // 桁数(8桁~16桁以外)チェックエラー
+    // 桁数チェックエラー
     RANGECHECK_ERROR,
     // 重複チェックエラー(例外あり)
     DUPLICATE_EXCEPTION_ERROR,
@@ -22,6 +22,10 @@ public enum ErrorKinds {
     CHECK_OK,
     // 正常終了
     SUCCESS,
+    // 名前空白チェックエラー
+    NAME_BLANK_ERROR,
+    // 名前字数チェックエラー
+    NAME_RANGCHECK_ERROR,
     // 該当社員がいない
     NOT_FOUND;
 

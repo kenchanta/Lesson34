@@ -43,6 +43,8 @@
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
                                             <input class="form-control" type="password" th:field="*{password}" th:errorclass="err" id="password" autocomplete="new-password">
+                                            <!--手動で設定されたエラーメッセージを画面に表示するための記述
+                                            　th:errors="*{password}"の書き方は、Employee.javaのpasswordフィールドにバリデーションアノテーションがついてないのでNG-->
                                             <span th:if="${passwordError} neq null" th:text="${passwordError}" class="text-danger"></span>
                                         </div>
                                     </div>
