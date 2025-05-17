@@ -27,18 +27,32 @@ public class ErrorMessage {
             put(ErrorKinds.DUPLICATE_EXCEPTION_ERROR,
                     new ArrayList<String>(Arrays.asList("codeError", "既に登録されている社員番号です")));
             // 従業員番号重複チェック(例外)用エラーメッセージ
-            put(ErrorKinds.DUPLICATE_ERROR, new ArrayList<String>(Arrays.asList("codeError", "既に登録されている社員番号です")));
+            put(ErrorKinds.DUPLICATE_ERROR,
+                    new ArrayList<String>(Arrays.asList("codeError", "既に登録されている社員番号です")));
             // ログイン中の従業員削除チェック用エラーメッセージ
             put(ErrorKinds.LOGINCHECK_ERROR,
                     new ArrayList<String>(Arrays.asList("deleteError", "ログイン中の従業員を削除することは出来ません")));
             // 同一日付チェック用エラーメッセージ
-            put(ErrorKinds.DATECHECK_ERROR, new ArrayList<String>(Arrays.asList("reportDateError", "既に登録されている日付です")));
-            //値を入力してください
+            put(ErrorKinds.DATECHECK_ERROR,
+                    new ArrayList<String>(Arrays.asList("reportDateError", "既に登録されている日付です")));
+            //　名前空白チェック用エラーメッセージ
             put(ErrorKinds.NAME_BLANK_ERROR,
                     new ArrayList<String>(Arrays.asList("nameError", "値を入力してください")));
-            //20文字以下で入力してください
+            //　名前20文字以下チェック用エラーメッセージ
             put(ErrorKinds.NAME_RANGCHECK_ERROR,
                     new ArrayList<String>(Arrays.asList("nameError", "20文字以下で入力してください")));
+            //　日報空白チェック用エラーメッセージ（日付、タイトル、内容）
+            put(ErrorKinds.REPORT_BLANK_ERROR,
+                    new ArrayList<String>(Arrays.asList("reportError", "値を入力してください")));
+            //　タイトル100文字以下チェック用エラーメッセージ
+            put(ErrorKinds.TITILE_RANGCHECK_ERROR,
+                    new ArrayList<String>(Arrays.asList("reportError", "100文字以下で入力してください")));
+            //　内容600文字以下チェック用エラーメッセージ
+            put(ErrorKinds.CONTENT_RANGCHECK_ERROR,
+                    new ArrayList<String>(Arrays.asList("reportError", "600文字以下で入力してください")));
+            //「画面で表示中の従業員 かつ 入力した日付」の日報データが存在する場合エラー
+            put(ErrorKinds.DUPLICATE_REPORT_ERROR,
+                    new ArrayList<String>(Arrays.asList("reportError", "既に登録されている日付です")));
         }
     };
 

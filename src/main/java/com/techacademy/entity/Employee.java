@@ -1,6 +1,7 @@
 
 package com.techacademy.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLRestriction;
@@ -21,6 +22,8 @@ import lombok.Data;
 @SQLRestriction("delete_flg = false")
 public class Employee {
 
+    //GENERALとADMINはRuleクラスのインスタンス（しかも singleton）。
+    //このクラスの役割：それぞれに "一般"、"管理者" という 日本語ラベルを持たせている。
     public static enum Role {
         GENERAL("一般"), ADMIN("管理者");
 
@@ -57,6 +60,9 @@ public class Employee {
     @Column(length = 255, nullable = false)
     private String password;
 
+    // 日報の日付
+    private LocalDate reportDate;
+
     // 削除フラグ(論理削除を行うため)
     @Column(columnDefinition="TINYINT", nullable = false)
     private boolean deleteFlg;
@@ -68,5 +74,6 @@ public class Employee {
     // 更新日時
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
 
 }

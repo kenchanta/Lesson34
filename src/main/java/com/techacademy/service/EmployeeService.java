@@ -89,7 +89,7 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
-    // 従業員削除
+    // 従業員削除 論理削除（フラグを立てて非表示にする）
     @Transactional
     public ErrorKinds delete(String code, UserDetail userDetail) {
 

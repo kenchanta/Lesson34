@@ -1,0 +1,80 @@
+package com.techacademy.service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.techacademy.constants.ErrorKinds;
+import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
+import com.techacademy.repository.EmployeeRepository;
+import com.techacademy.repository.ReportRepository;
+
+@Service
+public class ReportService {
+    private final ReportRepository reportRepository;
+
+    public ReportService(ReportRepository reportRepository) {
+        this.reportRepository = reportRepository;
+    }
+
+    //全件を検索
+    public List<Report> findAll(){
+        return reportRepository.findAll();
+    }
+
+    //一件を検索
+    public Report findByCode(String code) {
+        Optional<Report> option = reportRepository.findById(code);
+        Report report = option.orElse(null);
+        return report;
+    }
+
+    //更新
+    @Transactional //失敗すればロールバック.@Service などSpringのコンポーネントとして管理されていないと意味をなさない
+    public ErrorKinds update(Report report) {
+
+        //追記
+
+        return ErrorKinds.SUCCESS;
+    }
+
+
+    //削除 論理削除（フラグを立てて非表示にする）
+    @Transactional
+    public ErrorKinds delete(String code, UserDetail userDetail) {
+        // 自分を削除しようとした場合はエラーメッセージを表示
+        if (code.equals(userDetail.getEmployee().getCode())) {
+            return ErrorKinds.LOGINCHECK_ERROR;
+        }
+        Report report = findByCode(code);
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
+    }
+
+    // 日報保存
+    @Transactional
+    public ErrorKinds save(Report report, String code, UserDetail userDetail) {
+
+        // 入力チェック
+        if (code.equals(userDetail.getEmployee().getCode())) {
+            return ErrorKinds.DUPLICATE_REPORT_ERROR;
+        }
+
+        report.setDeleteFlg(false);
+
+        LocalDateTime now = LocalDateTime.now();
+        report.setCreatedAt(now);
+        report.setUpdatedAt(now);
+
+        reportRepository.save(report);
+        return ErrorKinds.SUCCESS;
+    }
+
+}
