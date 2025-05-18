@@ -69,6 +69,18 @@ public class ReportController {
 
     // 日報更新画面
     // 日報更新処理 入力チェック
-    // 日報削除処理
 
+    // 日報削除処理
+    @PostMapping(value = "/{code}/delete")
+    public String delete(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userdetail, Model model){
+        ErrorKinds result = reportService.delete(code, userdetail);
+
+        if (ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute("report", reportService.findByCode(code));
+            return detail(code, model);
+        }
+
+        return "redirect:/reports";
+    }
 }
