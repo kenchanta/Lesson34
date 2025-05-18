@@ -45,14 +45,14 @@ public class ErrorMessage {
             put(ErrorKinds.REPORT_BLANK_ERROR,
                     new ArrayList<String>(Arrays.asList("reportError", "値を入力してください")));
             //　タイトル100文字以下チェック用エラーメッセージ
-            put(ErrorKinds.TITILE_RANGCHECK_ERROR,
-                    new ArrayList<String>(Arrays.asList("reportError", "100文字以下で入力してください")));
+            //put(ErrorKinds.TITILE_RANGCHECK_ERROR,
+            //        new ArrayList<String>(Arrays.asList("title", "100文字以下で入力してください")));
             //　内容600文字以下チェック用エラーメッセージ
-            put(ErrorKinds.CONTENT_RANGCHECK_ERROR,
-                    new ArrayList<String>(Arrays.asList("reportError", "600文字以下で入力してください")));
+            //put(ErrorKinds.CONTENT_RANGCHECK_ERROR,
+            //        new ArrayList<String>(Arrays.asList("content", "600文字以下で入力してください")));
             //「画面で表示中の従業員 かつ 入力した日付」の日報データが存在する場合エラー
             put(ErrorKinds.DUPLICATE_REPORT_ERROR,
-                    new ArrayList<String>(Arrays.asList("reportError", "既に登録されている日付です")));
+                    new ArrayList<String>(Arrays.asList("reportDate", "既に登録されている日付です")));
         }
     };
 

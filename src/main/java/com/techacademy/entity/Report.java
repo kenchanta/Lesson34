@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.SQLRestriction;
+import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -37,14 +40,19 @@ public class Report {
 
     // 日付
     @Column(nullable = false)
+    @NotNull
     private LocalDate reportDate;
 
     // タイトル
     @Column(columnDefinition="VARCHAR(100)", nullable = false)
+    @NotEmpty
+    @Length(max = 100)
     private String title;
 
     // 内容
     @Column(length = 600, nullable = false)
+    @NotEmpty
+    @Length(max = 600)
     private String content;
 
     // @JoinColumn(name = "employee_code", referencedColumnName = "code")の追記により削除（employeeCode フィールドがあると、JPAが競合・混乱する）

@@ -1,5 +1,6 @@
 package com.techacademy.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -60,12 +61,7 @@ public class ReportService {
 
     // 日報保存
     @Transactional
-    public ErrorKinds save(Report report, String code, UserDetail userDetail) {
-
-        // 入力チェック
-        if (code.equals(userDetail.getEmployee().getCode())) {
-            return ErrorKinds.DUPLICATE_REPORT_ERROR;
-        }
+    public ErrorKinds save(Report report) {
 
         report.setDeleteFlg(false);
 
@@ -75,6 +71,10 @@ public class ReportService {
 
         reportRepository.save(report);
         return ErrorKinds.SUCCESS;
+    }
+
+    public boolean existsByEmployeeAndReportDate(Employee employee, LocalDate reportDate) {
+        return reportRepository.existsByEmployeeAndReportDate(employee, reportDate);
     }
 
 }

@@ -55,15 +55,41 @@ public class ReportController {
 
     // 日報新規登録画面
     @GetMapping("/add")
-    public String createReport(@ModelAttribute Report report, Model model) {
+    public String createReport(@ModelAttribute Report report, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        report.setEmployee(userDetail.getEmployee());
         model.addAttribute("report", report);
         return "reports/add";
     }
 
     // 日報新規登録処理
     @PostMapping(value = "/add")
-    public String add(@Validated Report report, BindingResult res, Model model) {
-        // 入力チェック
+    public String add(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+        if(res.hasErrors()){
+            return createReport(report, userDetail, model);
+        }
+        // 入力チェック(アノテーションバリデーション)。エンティティの@Validated（または @Valid）アノテーション付きのオブジェクトのバリデーション結果をチェック
+        if(report.getReportDate() == null) {
+            ErrorKinds result = ErrorKinds.REPORT_BLANK_ERROR;
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            return createReport(report, userDetail, model);
+        }
+        //入力チェック（独自（手動チェック））。バリデーションアノテーションでは表現できない「ロジックチェック」などは、自分でBindingResult にエラーを追加
+        Employee loginUser = userDetail.getEmployee();
+            if(reportService.existsByEmployeeAndReportDate(loginUser, report.getReportDate())) {
+                ErrorKinds result = ErrorKinds.DUPLICATE_REPORT_ERROR;
+                res.rejectValue(
+                        "reportDate",
+                        ErrorMessage.getErrorName(result),    // エラーコード ("reportError")
+                        ErrorMessage.getErrorValue(result)    // エラーメッセージ ("既に登録されている日付です")
+                    );
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return createReport(report, userDetail, model);
+            }
+
+         report.setEmployee(loginUser);
+         reportService.save(report);
+
         return "redirect:/reports";
     }
 
