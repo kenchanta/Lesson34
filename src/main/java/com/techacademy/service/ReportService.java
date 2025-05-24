@@ -37,9 +37,14 @@ public class ReportService {
     //更新
     @Transactional //失敗すればロールバック.@Service などSpringのコンポーネントとして管理されていないと意味をなさない
     public ErrorKinds update(Report report) {
+        Report original = findByCode(report.getEmployee().getCode());
 
-        //追記
+        original.setReportDate(report.getReportDate());
+        original.setTitle(report.getTitle());
+        original.setContent(report.getContent());
+        original.setUpdatedAt(LocalDateTime.now());
 
+        reportRepository.save(original);
         return ErrorKinds.SUCCESS;
     }
 

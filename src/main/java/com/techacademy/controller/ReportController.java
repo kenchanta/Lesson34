@@ -94,7 +94,27 @@ public class ReportController {
     }
 
     // 日報更新画面
-    // 日報更新処理 入力チェック
+    @GetMapping("/update")
+    public String update(@RequestParam("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+        Report report = reportService.findByCode(code);
+        model.addAttribute("report", report);
+        return "reports/update";
+    }
+
+    // 日報更新処理
+    @PostMapping("/update")
+    public String reportUpdate(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+
+        //@ModelAttribute（または引数の Report report）は フォームで送信されたフィールドだけを埋める＝フォーム側に値を埋める or POST時に補完する必要がある。(nullのまま渡すと画面がクラッシュする)
+        report.setEmployee(userDetail.getEmployee());
+
+        //１画面からうけとった日付＆テーブルの方にはいっている日報の日付（更新元）1件分で比較＝日付がかわったかどうかの確認、２変更したほうの日付と同じのがないかすでにあるすべての日報一覧と比較
+        if(res.hasErrors()) {
+            return "reports/update";
+        }
+        reportService.update(report);
+        return "redirect:/reports";
+    }
 
     // 日報削除処理
     @PostMapping(value = "/{code}/delete")
