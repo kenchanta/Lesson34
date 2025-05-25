@@ -28,16 +28,17 @@ public class ReportService {
     }
 
     //一件を検索
-    public Report findByCode(String code) {
+    public Report findByCode(Integer code) {
         Optional<Report> option = reportRepository.findById(code);
         Report report = option.orElse(null);
         return report;
     }
 
+
     //更新
     @Transactional //失敗すればロールバック.@Service などSpringのコンポーネントとして管理されていないと意味をなさない
     public ErrorKinds update(Report report) {
-        Report original = findByCode(report.getEmployee().getCode());
+        Report original = findByCode(report.getId());
 
         original.setReportDate(report.getReportDate());
         original.setTitle(report.getTitle());
@@ -51,23 +52,17 @@ public class ReportService {
 
     //削除 論理削除（フラグを立てて非表示にする）
     @Transactional
-    public ErrorKinds delete(String code, UserDetail userDetail) {
-        // 自分を削除しようとした場合はエラーメッセージを表示
-        if (code.equals(userDetail.getEmployee().getCode())) {
-            return ErrorKinds.LOGINCHECK_ERROR;
-        }
+    public ErrorKinds delete(Integer code, UserDetail userDetail) {
         Report report = findByCode(code);
         LocalDateTime now = LocalDateTime.now();
         report.setUpdatedAt(now);
         report.setDeleteFlg(true);
-
         return ErrorKinds.SUCCESS;
-    }
+        }
 
     // 日報保存
     @Transactional
     public ErrorKinds save(Report report) {
-
         report.setDeleteFlg(false);
 
         LocalDateTime now = LocalDateTime.now();

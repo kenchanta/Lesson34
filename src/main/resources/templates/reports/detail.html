@@ -37,7 +37,7 @@
                                     </tr>
                                     <tr>
                                         <th>内容</th>
-                                        <td class="align-middle" th:text="${report.title}"></td>
+                                        <td class="align-middle" th:text="${report.content}"></td>
                                     </tr>
                                     <tr>
                                         <th>登録日時</th>
@@ -50,7 +50,9 @@
                                 </table>
                                 <div class="mt-5 row g-1">
                                     <div class="col-auto">
-                                        <a th:href="@{/reports/update(code=${report.employee.code})}" class="btn btn-primary">更新</a>
+                                        <!--@{...}で使っているreport.idはThymeleaf側では実際には「Reportエンティティの主キー（@Id）」を参照している
+                                        ＝そのためコントローラーでは実際には@Idがついているcodeフィールドを呼び出している-->
+                                        <a th:href="@{/reports/{id}/update(id=${report.id})}" class="btn btn-primary">更新</a>
                                     </div>
                                     <div class="col-auto">
                                         <form name="form" th:action="@{/reports/{code}/delete(code=${code})}" th:method="post">

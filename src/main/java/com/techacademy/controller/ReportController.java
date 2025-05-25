@@ -21,6 +21,7 @@ import com.techacademy.constants.ErrorMessage;
 
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
+import com.techacademy.repository.ReportRepository;
 import com.techacademy.service.EmployeeService;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
@@ -47,7 +48,7 @@ public class ReportController {
 
     // 日報詳細画面
     @GetMapping(value = "/{code}/")
-    public String detail(@PathVariable("code") String code, Model model) {
+    public String detail(@PathVariable("code") Integer code, Model model) {
 
         model.addAttribute("report", reportService.findByCode(code));
         return "reports/detail";
@@ -94,31 +95,44 @@ public class ReportController {
     }
 
     // 日報更新画面
-    @GetMapping("/update")
-    public String update(@RequestParam("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
+    @GetMapping("/{code}/update")
+    public String update(@PathVariable("code") Integer code, Model model) {
         Report report = reportService.findByCode(code);
         model.addAttribute("report", report);
         return "reports/update";
     }
 
     // 日報更新処理
-    @PostMapping("/update")
-    public String reportUpdate(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
-
+    @PostMapping("/{code}/update")
+    public String reportUpdate(@PathVariable("code") Integer code, @Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail, Model model) {
         //@ModelAttribute（または引数の Report report）は フォームで送信されたフィールドだけを埋める＝フォーム側に値を埋める or POST時に補完する必要がある。(nullのまま渡すと画面がクラッシュする)
         report.setEmployee(userDetail.getEmployee());
+        Report original = reportService.findByCode(code);
 
-        //１画面からうけとった日付＆テーブルの方にはいっている日報の日付（更新元）1件分で比較＝日付がかわったかどうかの確認、２変更したほうの日付と同じのがないかすでにあるすべての日報一覧と比較
         if(res.hasErrors()) {
+            model.addAttribute("report",report);
             return "reports/update";
         }
+
+        //１)画面からうけとった日付＆テーブルの方にはいっている日報の日付（更新元）1件分で比較＝日付がかわったかどうかの確認
+        if(!report.getReportDate().isEqual(original.getReportDate())){
+            List<Report> reportList = reportService.findAll();
+            //２)変更したほうの日付と同じのがないか、日報一覧と比較
+            for(Report ReportForCheck : reportList) {
+                if(ReportForCheck.getReportDate().isEqual(report.getReportDate())) {
+                    model.addAttribute("reportError", "既に登録されている日付です");
+                    return "reports/update";
+                }
+            }
+        }
+
         reportService.update(report);
         return "redirect:/reports";
     }
 
     // 日報削除処理
     @PostMapping(value = "/{code}/delete")
-    public String delete(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userdetail, Model model){
+    public String delete(@PathVariable("code") Integer code, @AuthenticationPrincipal UserDetail userdetail, Model model){
         ErrorKinds result = reportService.delete(code, userdetail);
 
         if (ErrorMessage.contains(result)) {
