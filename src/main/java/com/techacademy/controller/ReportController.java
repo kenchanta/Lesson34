@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,16 +33,29 @@ import com.techacademy.service.UserDetail;
 public class ReportController {
 
     private final ReportService reportService;
+    private final ReportRepository reportRepository;
 
     @Autowired
-    public ReportController(ReportService reportService) {
+    public ReportController(ReportService reportService, ReportRepository reportRepository) {
         this.reportService = reportService;
+        this.reportRepository = reportRepository;
     }
 
     // 日報一覧画面
     @GetMapping
-    public String list(Model model) {
-        List<Report> reports = reportService.findAll();
+    public String list(@AuthenticationPrincipal UserDetail userDetail, Model model) {
+        List<Report> reports;
+
+        //追加：一般権限者の制限
+        if(userDetail.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
+            // 管理者：すべての日報を取得
+            reports = reportService.findAll();
+        }else {
+            // 一般ユーザー：自分が登録した日報のみ取得
+            String code = userDetail.getEmployee().getCode();
+            reports = reportService.findByEmployeeCode(code);
+            }
+
         model.addAttribute("reportList", reports);
         model.addAttribute("listSize", reports.size());
         return "reports/list";

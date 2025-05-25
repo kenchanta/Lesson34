@@ -2,6 +2,7 @@ package com.techacademy.repository;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -14,4 +15,6 @@ public interface ReportRepository extends JpaRepository<Report,Integer> {
 
     //findBy..のかわりに使える(finByのPowerUPver.)　存在するかどうか？の判定
     boolean existsByEmployeeAndReportDate(Employee employee, LocalDate reportDate);
+
+    List<Report> findByEmployee_Code(String code);
 }

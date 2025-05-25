@@ -34,6 +34,9 @@ public class ReportService {
         return report;
     }
 
+    public List<Report> findByEmployeeCode(String code) {
+        return reportRepository.findByEmployee_Code(code);
+    }
 
     //更新
     @Transactional //失敗すればロールバック.@Service などSpringのコンポーネントとして管理されていないと意味をなさない
