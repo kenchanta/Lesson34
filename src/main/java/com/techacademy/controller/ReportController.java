@@ -49,7 +49,7 @@ public class ReportController {
         //追加：一般権限者の制限
         if(userDetail.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ADMIN"))) {
             // 管理者：すべての日報を取得
-            reports = reportService.findAll();
+            reports = reportService.findAllActive();
         }else {
             // 一般ユーザー：自分が登録した日報のみ取得
             String code = userDetail.getEmployee().getCode();
@@ -131,7 +131,7 @@ public class ReportController {
 
         //１)画面からうけとった日付＆テーブルの方にはいっている日報の日付（更新元）1件分で比較＝日付がかわったかどうかの確認
         if(!report.getReportDate().isEqual(original.getReportDate())){
-            List<Report> reportList = reportService.findAll();
+            List<Report> reportList = reportService.findAllActive(); //findAllは論理削除されたレポートも含めてすべて取得しているため、「削除したはずのレポートが表示される」状態になる。
             //２)変更したほうの日付と同じのがないか、日報一覧と比較
             for(Report ReportForCheck : reportList) {
                 if(ReportForCheck.getReportDate().isEqual(report.getReportDate())) {

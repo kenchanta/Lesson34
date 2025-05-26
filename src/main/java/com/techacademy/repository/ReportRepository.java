@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
@@ -16,5 +17,8 @@ public interface ReportRepository extends JpaRepository<Report,Integer> {
     //findBy..のかわりに使える(finByのPowerUPver.)　存在するかどうか？の判定
     boolean existsByEmployeeAndReportDate(Employee employee, LocalDate reportDate);
 
-    List<Report> findByEmployee_Code(String code);
+    List<Report> findByDeleteFlgFalseAndEmployee_Code(String code);
+
+    @Query("SELECT r FROM Report r WHERE r.deleteFlg = false AND r.employee.deleteFlg = false")
+    List<Report> findAllActive();
 }

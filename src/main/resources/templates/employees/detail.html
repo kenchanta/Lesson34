@@ -49,7 +49,7 @@
                                         <a th:href="@{/employees/update(code=${employee.code})}" class="btn btn-primary">更新</a>
                                     </div>
                                     <div class="col-auto">
-                                        <form name="form" th:action="@{/employees/{code}/delete(code=${code})}" th:method="post">
+                                        <form name="form" th:action="@{/employees/{code}/delete(code=${employee.code})}" th:method="post">
                                             <input type="submit" value="削除" class="btn btn-primary">
                                         </form>
                                     </div>

@@ -24,7 +24,7 @@ public class ReportService {
 
     //全件を検索
     public List<Report> findAll(){
-        return reportRepository.findAll();
+        return reportRepository.findAllActive();
     }
 
     //一件を検索
@@ -35,7 +35,7 @@ public class ReportService {
     }
 
     public List<Report> findByEmployeeCode(String code) {
-        return reportRepository.findByEmployee_Code(code);
+        return reportRepository.findByDeleteFlgFalseAndEmployee_Code(code);
     }
 
     //更新
@@ -60,8 +60,27 @@ public class ReportService {
         LocalDateTime now = LocalDateTime.now();
         report.setUpdatedAt(now);
         report.setDeleteFlg(true);
+        reportRepository.save(report);//追加
         return ErrorKinds.SUCCESS;
         }
+
+    //削除 従業員削除の場合レポートも削除する
+    @Transactional
+    public void deleteByEmployee(String code, UserDetail userDetail) {
+        List<Report> reports = reportRepository.findByDeleteFlgFalseAndEmployee_Code(code);
+
+        for(Report report : reports) {
+            report.setDeleteFlg(true);
+            report.setUpdatedAt(LocalDateTime.now());
+        }
+
+        reportRepository.saveAll(reports);
+    }
+
+    public List<Report> findAllActive() {
+        return reportRepository.findAllActive();
+    }
+
 
     // 日報保存
     @Transactional

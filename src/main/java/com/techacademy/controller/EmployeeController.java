@@ -123,6 +123,8 @@ public class EmployeeController {
     @PostMapping(value = "/{code}/delete")
     public String delete(@PathVariable("code") String code, @AuthenticationPrincipal UserDetail userDetail, Model model) {
 
+        //employeeService.delete() を呼び出して削除を実行
+        //ErrorKinds.LOGINCHECK_ERROR などの値を返す
         ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
